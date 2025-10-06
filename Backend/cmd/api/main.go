@@ -1,13 +1,14 @@
 package main
 
 import (
+	"github.com/Gabrieldevreis/FornoGestor/internal/config"
+	"github.com/Gabrieldevreis/FornoGestor/internal/database"
+	"github.com/Gabrieldevreis/FornoGestor/internal/routes"
 	"log"
-	"fornogestor/internal/config"
-	"fornogestor/internal/database"
-	"fornogestor/internal/routes"
-	
+
+	_ "github.com/Gabrieldevreis/FornoGestor/docs"
+
 	"github.com/gin-gonic/gin"
-	_ "fornogestor/docs"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
@@ -34,18 +35,18 @@ import (
 
 func main() {
 	cfg := config.LoadConfig()
-	
+
 	db := database.Connect(cfg)
 	database.Migrate(db)
 	database.Seed(db)
-	
+
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
-	
+
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	
+
 	routes.SetupRoutes(router, db, cfg)
-	
+
 	log.Printf("Server starting on port %s", cfg.Port)
 	if err := router.Run(":" + cfg.Port); err != nil {
 		log.Fatal("Failed to start server:", err)
