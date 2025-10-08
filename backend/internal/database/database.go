@@ -33,6 +33,14 @@ func Migrate(db *gorm.DB) {
 	err := db.AutoMigrate(
 		&models.User{},
 		&models.RefreshToken{},
+		&models.Client{},
+		&models.ProductCategory{},
+		&models.Product{},
+		&models.Table{},
+		&models.Order{},
+		&models.OrderItem{},
+		&models.FinancialCategory{},
+		&models.FinancialEntry{},
 	)
 
 	if err != nil {
